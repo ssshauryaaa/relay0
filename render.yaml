@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: relay
+    runtime: python
+    rootDir: backend
+    buildCommand: |
+      cd ../frontend && npm ci && npm run build && cd ../backend && pip install -r requirements.txt
+    startCommand: gunicorn --worker-class eventlet -w 1 --bind 0.0.0.0:$PORT app:app
+    envVars:
+      - key: RELAY_SECRET_KEY
+        generateValue: true
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    plan: free
